@@ -1,0 +1,8 @@
+<h1>All Tags</h1>
+<% @tags.each do |tag| %>
+  <div>
+    <%= link_to tag.name, tag_path(tag) %>
+  </div>
+<% end %>
+<br>
+<%= link_to "New Tag", new_tag_path %>

@@ -1,0 +1,21 @@
+<div class="article">
+
+<%= image_tag(article.cover.url, size: "300x200") if article.cover.present? %>
+  <h2><%= link_to article.title, article %></h2>
+  <p>Description: <%= article.description %></p>
+  <p>Tag: <% article.tags.each do |tag| %>
+    <%= tag.name %>
+  <% end %></p>
+  <p>Category: <%= article.category.name %></p>
+  <p>Author: <%= article.author.email %></p>
+  <p>Posted <%= time_ago_in_words(article.created_at) %> ago</p>
+  <% if article.author == current_user && article.published %>
+    <%= form_with model: article, url: hide_article_path(article), method: :post do |form| %>
+      <%= form.submit 'Hide' %>
+    <% end %>
+  <% elsif article.author == current_user && !article.published %>
+    <%= form_with model: article, url: publish_article_path(article), method: :post do |form| %>
+      <%= form.submit 'Publish' %>
+    <% end %>
+  <% end %><br>
+</div>

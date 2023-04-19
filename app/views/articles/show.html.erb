@@ -1,0 +1,71 @@
+<p>
+  <strong>Title:</strong>
+  <%= @article.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @article.description %>
+</p>
+
+<%= image_tag(@article.cover.url, size: "300x200") if @article.cover.present? %>
+
+<p>
+  <strong>Tags:</strong>
+  <% @article.tags.each do |tag| %>
+    <%= tag.name %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @article.category.name %>
+</p>
+
+<p>
+  <strong>Author:</strong>
+  <%= @article.author.email %>
+</p>
+
+<p>
+  <strong>Created at:</strong>
+  <%= @article.created_at %>
+</p>
+
+<% if @article.author == current_user %>
+<%= link_to 'Edit', edit_article_path(@article) %> |
+<%= link_to "Destroy", article_path(@article), data: {
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure?"
+                  } %> |
+<% end %>
+<%= link_to 'Back', articles_path %> 
+
+<div id="comments-container">
+  <h2>Comments</h2>
+  <% if @comments.any? %>
+    <% @comments.each do |comment| %>
+      <p>
+        <strong>Commenter:</strong>
+        <%= comment.user.email %>
+      </p>
+
+      <p>
+        <strong>Comment:</strong>
+        <%= comment.value %>
+      </p>
+    <% end %>
+    <%= paginate @comments %>
+  <% end %>
+</div>
+
+<h2>Add a comment:</h2>
+<%= form_with(model: [@article, @article.comments.build], url: article_path(@article, page: params[:page])) do |form| %>
+  <p>
+    <%= form.label :value %><br>
+    <%= form.text_area :value %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

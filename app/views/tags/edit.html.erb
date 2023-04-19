@@ -1,0 +1,7 @@
+<h1>Edit Tag</h1>
+<%= form_with model: @tag, url: tag_path(@tag), method: :patch do |form| %>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+  <%= form.submit "Update Tag" %>
+<% end %>
+<p><%= link_to "Back to Tag", tag_path(@tag) %> | <%= link_to "Back to All Tags", tags_path %></p>

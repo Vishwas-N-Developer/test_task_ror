@@ -1,0 +1,52 @@
+<h1>Elastic search for posts</h1>
+
+<%= form_for :search_articles, url: search_articles_path, method: :get do |form| %>
+  <%= form.text_field :query, value: params[:search_articles].presence && params[:search_articles][:query] %>
+  <%= form.submit 'Search' %>
+<% end %>
+
+<% unless @articles.nil? %>
+  <% if @articles.empty? %>
+    <h2>No articles found matching your query.</h2>
+  <% else %>
+    <h2>Search results</h2>
+
+    <table class="table">
+      <thead>
+         <tr>
+           <th>Author</th>
+           <th>Title</th>
+           <th>Description</th>
+           <th>Tags</th>
+           <th>Category</th>
+           <th>Published on</th>
+           <th>Actions</th>
+           <th>Img</th>
+         </tr>
+      </thead>
+
+      <tbody>
+        <% @articles.each do |article| %>
+          <tr>           
+            <td><% author = User.find_by(id: article.author_id) %>
+              <%= author.email %>
+            </td>
+            <td><%= article.title %></td>
+            <td><%= article.description %></td>
+            <td>  
+              <% article.tags.each do |tag| %>
+                <%= tag.name %>
+              <% end %>  
+            </td>
+            <td><% category = Category.find_by(id: article.category_id) %>
+              <%= category.name %></td>
+            <td><%= time_ago_in_words(article.created_at) %> ago</td>
+
+            <td><%= link_to 'View', article_path(article.id) %></td>
+            <td><%= image_tag(article.cover.url, size: "300x200") if article.cover.present? %></td>
+          </tr>
+        <% end %>
+      <tbody>
+    </table>
+  <% end %>
+<% end %>
